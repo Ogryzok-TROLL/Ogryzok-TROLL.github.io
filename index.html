@@ -16,14 +16,12 @@
       left: 0;
       width: 100%;
       height: 100vh;
-      background-color: transparent;
-      border: none;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <button id="invisible-button" onclick="playSound()">Нажми меня!</button>
+  <img id="invisible-button" src="image.png" onclick="playSound()" style="width: 100%; height: 100vh; object-fit: cover;">
   <script>
     function playSound() {
       var sound = new Audio('audio.mp3'); // замените 'звук.mp3' на путь к вашему звуковому файлу
