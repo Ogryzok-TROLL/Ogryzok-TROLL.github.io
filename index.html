@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Невидимая кнопка</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+    }
+    #invisible-button {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button id="invisible-button" onclick="playSound()">Нажми меня, сука!</button>
+  <script>
+    function playSound() {
+      var sound = new Audio('audio.mp3'); // замените 'звук.mp3' на путь к вашему звуковому файлу
+      sound.volume = 1.0; // максимальная громкость
+      sound.play();
+    }
+  </script>
+</body>
+</html>
