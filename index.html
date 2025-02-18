@@ -40,7 +40,7 @@
             position: absolute;
             border-radius: 50%;
             opacity: 0.8;
-            will-change: transform;
+            will-change: transform, background-color;
         }
     </style>
 </head>
@@ -54,6 +54,10 @@
         const numBubbles = 100;
         const colors = ['#FF69B4', '#FFD700', '#32CD32', '#1E90FF', '#FF4500', '#FF6347', '#4682B4', '#9400D3', '#00FA9A', '#FF1493'];
 
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
         function createBubble() {
             const bubble = document.createElement('div');
             bubble.classList.add('bubble');
@@ -62,7 +66,7 @@
             bubble.style.width = `${size}px`;
             bubble.style.height = `${size}px`;
 
-            const color = colors[Math.floor(Math.random() * colors.length)];
+            const color = getRandomColor();
             bubble.style.backgroundColor = color;
 
             const x = Math.random() * (window.innerWidth - size);
@@ -73,32 +77,84 @@
 
             bubble.speedX = speedX;
             bubble.speedY = speedY;
+            bubble.size = size;
 
             document.body.appendChild(bubble);
             return bubble;
         }
 
+        function detectCollision(bubble1, bubble2) {
+            const dx = bubble1.x - bubble2.x;
+            const dy = bubble1.y - bubble2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            return distance < (bubble1.size + bubble2.size) / 2;
+        }
+
+        function handleCollision(bubble1, bubble2) {
+            const dx = bubble1.x - bubble2.x;
+            const dy = bubble1.y - bubble2.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const overlap = (bubble1.size + bubble2.size) / 2 - distance;
+
+            const nx = dx / distance;
+            const ny = dy / distance;
+
+            bubble1.x -= overlap * nx;
+            bubble1.y -= overlap * ny;
+            bubble2.x += overlap * nx;
+            bubble2.y += overlap * ny;
+
+            const tempSpeedX = bubble1.speedX;
+            const tempSpeedY = bubble1.speedY;
+
+            bubble1.speedX = bubble2.speedX * nx + bubble2.speedY * ny;
+            bubble1.speedY = bubble2.speedX * ny - bubble2.speedY * nx;
+            bubble2.speedX = tempSpeedX * nx + tempSpeedY * ny;
+            bubble2.speedY = tempSpeedX * ny - tempSpeedY * nx;
+
+            // Плавное переливание цветов
+            const color1 = bubble1.element.style.backgroundColor;
+            const color2 = bubble2.element.style.backgroundColor;
+            bubble1.element.style.backgroundColor = color2;
+            bubble2.element.style.backgroundColor = color1;
+        }
+
         function animateBubbles() {
             requestAnimationFrame(animateBubbles);
 
-            document.querySelectorAll('.bubble').forEach(bubble => {
-                let x = parseFloat(bubble.style.left) || 0;
-                let y = parseFloat(bubble.style.top) || 0;
+            const bubbleElements = document.querySelectorAll('.bubble');
+            const bubbles = Array.from(bubbleElements).map((element, index) => ({
+                element,
+                x: parseFloat(element.style.left) || 0,
+                y: parseFloat(element.style.top) || 0,
+                speedX: element.speedX,
+                speedY: element.speedY,
+                size: element.size
+            }));
 
-                x += bubble.speedX;
-                y += bubble.speedY;
+            bubbles.forEach(bubble => {
+                bubble.x += bubble.speedX;
+                bubble.y += bubble.speedY;
 
-                if (x <= 0 || x >= window.innerWidth - parseInt(bubble.style.width)) {
+                if (bubble.x <= 0 || bubble.x >= window.innerWidth - bubble.size) {
                     bubble.speedX *= -1;
                 }
 
-                if (y <= 0 || y >= window.innerHeight - parseInt(bubble.style.height)) {
+                if (bubble.y <= 0 || bubble.y >= window.innerHeight - bubble.size) {
                     bubble.speedY *= -1;
                 }
 
-                bubble.style.left = `${x}px`;
-                bubble.style.top = `${y}px`;
+                bubble.element.style.left = `${bubble.x}px`;
+                bubble.element.style.top = `${bubble.y}px`;
             });
+
+            for (let i = 0; i < bubbles.length; i++) {
+                for (let j = i + 1; j < bubbles.length; j++) {
+                    if (detectCollision(bubbles[i], bubbles[j])) {
+                        handleCollision(bubbles[i], bubbles[j]);
+                    }
+                }
+            }
         }
 
         for (let i = 0; i < numBubbles; i++) {
