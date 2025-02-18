@@ -4,14 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Анимированная Заставка</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background-color: #282c34;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .content {
+            text-align: center;
+            z-index: 10;
+        }
+
+        .content h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .content p {
+            font-size: 1.5em;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            opacity: 0.8;
+            will-change: transform;
+        }
+    </style>
 </head>
 <body>
-    <div class="background"></div>
     <div class="content">
-        <h1>Добро пожаловать!</h1>
-        <p>Наслаждайтесь нашей анимацией!</p>
+        <h1>Мой Проект</h1>
+        <p>Здесь краткое описание вашего проекта.</p>
     </div>
-    <script src="script.js"></script>
+
+    <script>
+        const numBubbles = 50;
+        const colors = ['#FF69B4', '#FFD700', '#32CD32', '#1E90FF', '#FF4500'];
+        const bubbles = [];
+
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+
+            const size = Math.random() * 40 + 10;
+            bubble.style.width = `${size}px`;
+            bubble.style.height = `${size}px`;
+
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            bubble.style.backgroundColor = color;
+
+            const x = Math.random() * (window.innerWidth - size);
+            const y = Math.random() * (window.innerHeight - size);
+
+            bubble.style.left = `${x}px`;
+            bubble.style.top = `${y}px`;
+
+            const speedX = (Math.random() - 0.5) * 2;
+            const speedY = (Math.random() - 0.5) * 2;
+
+            bubbles.push({ element: bubble, x, y, speedX, speedY });
+
+            document.body.appendChild(bubble);
+        }
+
+        function animateBubbles() {
+            requestAnimationFrame(animateBubbles);
+
+            bubbles.forEach(bubble => {
+                bubble.x += bubble.speedX;
+                bubble.y += bubble.speedY;
+
+                if (bubble.x <= 0 || bubble.x >= window.innerWidth - parseInt(bubble.element.style.width)) {
+                    bubble.speedX *= -1;
+                }
+
+                if (bubble.y <= 0 || bubble.y >= window.innerHeight - parseInt(bubble.element.style.height)) {
+                    bubble.speedY *= -1;
+                }
+
+                bubble.element.style.left = `${bubble.x}px`;
+                bubble.element.style.top = `${bubble.y}px`;
+            });
+        }
+
+        for (let i = 0; i < numBubbles; i++) {
+            createBubble();
+        }
+
+        animateBubbles();
+    </script>
 </body>
 </html>
