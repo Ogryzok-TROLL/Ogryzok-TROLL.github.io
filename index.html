@@ -12,7 +12,7 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Arial', sans-serif;
-            background-color: #282c34;
+            background-color: #121212; /* Темный фон */
             color: white;
             display: flex;
             justify-content: center;
@@ -28,16 +28,17 @@
         .content h1 {
             font-size: 3em;
             margin-bottom: 20px;
+            color: #FFD700; /* Желтый цвет заголовка */
         }
 
         .content p {
             font-size: 1.5em;
+            color: #FFFFFF; /* Белый цвет текста */
         }
 
         .bubble {
             position: absolute;
             border-radius: 50%;
-            background-color: rgba(255, 255, 255, 0.7);
             opacity: 0.8;
             will-change: transform;
         }
@@ -50,9 +51,8 @@
     </div>
 
     <script>
-        const numBubbles = 50;
-        const colors = ['#FF69B4', '#FFD700', '#32CD32', '#1E90FF', '#FF4500'];
-        const bubbles = [];
+        const numBubbles = 100;
+        const colors = ['#FF69B4', '#FFD700', '#32CD32', '#1E90FF', '#FF4500', '#FF6347', '#4682B4', '#9400D3', '#00FA9A', '#FF1493'];
 
         function createBubble() {
             const bubble = document.createElement('div');
@@ -68,34 +68,36 @@
             const x = Math.random() * (window.innerWidth - size);
             const y = Math.random() * (window.innerHeight - size);
 
-            bubble.style.left = `${x}px`;
-            bubble.style.top = `${y}px`;
+            const speedX = (Math.random() - 0.5) * 3;
+            const speedY = (Math.random() - 0.5) * 3;
 
-            const speedX = (Math.random() - 0.5) * 2;
-            const speedY = (Math.random() - 0.5) * 2;
-
-            bubbles.push({ element: bubble, x, y, speedX, speedY });
+            bubble.speedX = speedX;
+            bubble.speedY = speedY;
 
             document.body.appendChild(bubble);
+            return bubble;
         }
 
         function animateBubbles() {
             requestAnimationFrame(animateBubbles);
 
-            bubbles.forEach(bubble => {
-                bubble.x += bubble.speedX;
-                bubble.y += bubble.speedY;
+            document.querySelectorAll('.bubble').forEach(bubble => {
+                let x = parseFloat(bubble.style.left) || 0;
+                let y = parseFloat(bubble.style.top) || 0;
 
-                if (bubble.x <= 0 || bubble.x >= window.innerWidth - parseInt(bubble.element.style.width)) {
+                x += bubble.speedX;
+                y += bubble.speedY;
+
+                if (x <= 0 || x >= window.innerWidth - parseInt(bubble.style.width)) {
                     bubble.speedX *= -1;
                 }
 
-                if (bubble.y <= 0 || bubble.y >= window.innerHeight - parseInt(bubble.element.style.height)) {
+                if (y <= 0 || y >= window.innerHeight - parseInt(bubble.style.height)) {
                     bubble.speedY *= -1;
                 }
 
-                bubble.element.style.left = `${bubble.x}px`;
-                bubble.element.style.top = `${bubble.y}px`;
+                bubble.style.left = `${x}px`;
+                bubble.style.top = `${y}px`;
             });
         }
 
