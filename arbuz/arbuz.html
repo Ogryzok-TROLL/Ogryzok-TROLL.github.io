@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TROLL HAHAHAHAH</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #button {
+      width: 350px; /* размер картинки */
+      height: 350px; /* размер картинки */
+      border-radius: 50%; /* закруглённые края */
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <img id="button" src="image.png" onclick="playSound()">
+  <script>
+    function playSound() {
+      var sound = new Audio('audio.mp3'); // замените 'звук.mp3' на путь к вашему звуковому файлу
+      sound.volume = 1.0; // максимальная громкость
+      sound.play();
+    }
+  </script>
+</body>
+</html>
