@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Крутящаяся картинка</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    .container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1000px; /* создаём псевдо-3D */
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform-style: preserve-3d;
+      animation: spin 6s infinite alternate ease-in-out;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotateY(0deg);
+      }
+      to {
+        transform: rotateY(180deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="photo.png" alt="photo">
+  </div>
+</body>
+</html>
