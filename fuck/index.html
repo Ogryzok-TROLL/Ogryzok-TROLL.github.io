@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Крутящаяся картинка</title>
+  <title>Крутящаяся картинка с отблеском</title>
   <style>
     html, body {
       margin: 0;
@@ -18,30 +18,55 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 1000px; /* псевдо-3D */
+      perspective: 1000px;
+      position: relative;
+    }
+
+    .image-wrapper {
+      position: relative;
+      display: inline-block;
+      animation: spin 6s infinite alternate ease-in-out;
+      transform-style: preserve-3d;
     }
 
     img {
       max-width: 100%;
       max-height: 100%;
-      object-fit: contain; /* показать полностью */
-      transform-style: preserve-3d;
-      animation: spin 6s infinite alternate ease-in-out;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Отблеск поверх */
+    .shine {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 60%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      animation: shineMove 6s infinite alternate ease-in-out;
     }
 
     @keyframes spin {
-      from {
-        transform: rotateY(0deg);
-      }
-      to {
-        transform: rotateY(180deg);
-      }
+      0%   { transform: rotateY(0deg)   scaleX(1) skewY(0deg); }
+      50%  { transform: rotateY(90deg)  scaleX(0.9) skewY(2deg); }
+      100% { transform: rotateY(180deg) scaleX(1) skewY(-2deg); }
+    }
+
+    @keyframes shineMove {
+      from { background-position: -150% 0; }
+      to   { background-position: 150% 0; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <img src="photo.png" alt="photo">
+    <div class="image-wrapper">
+      <img src="photo.png" alt="photo">
+      <div class="shine"></div>
+    </div>
   </div>
 </body>
 </html>
